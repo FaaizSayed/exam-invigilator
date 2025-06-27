@@ -23,7 +23,7 @@
    npm install
    ```
 
-## Testing
+## Run Unit Tests
 Automated tests for filtering, sorting, and key component rendering are included.
 Install dependencies:
    ```bash
