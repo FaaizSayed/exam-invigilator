@@ -31,7 +31,6 @@ type Props = {
 };
 
 export default function StudentDetailsModal({ username, onClose }: Props) {
-  // In a real app, you'd fetch this from an API based on username
   const student = { ...mockStudent, username };
 
   return (

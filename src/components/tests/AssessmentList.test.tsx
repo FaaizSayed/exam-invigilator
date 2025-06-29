@@ -46,10 +46,8 @@ describe("AssessmentList", () => {
   it("renders table with data", async () => {
     renderWithRouter();
 
-    // loading spinner appears first
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
 
-    // table rows show up after the mock fetch resolves
     expect(await screen.findByText("Middle East")).toBeInTheDocument();
     expect(screen.getByText("AI Midterm 2025")).toBeInTheDocument();
     expect(screen.getByText("Europe")).toBeInTheDocument();
@@ -61,14 +59,11 @@ describe("AssessmentList", () => {
     await screen.findByText("Middle East");
     const user = userEvent.setup();
 
-    // Open the Area dropdown
     const areaSelect = screen.getByRole("combobox", { name: /area/i });
     await user.click(areaSelect);
 
-    // Choose Europe
     await user.click(await screen.findByRole("option", { name: "Europe" }));
 
-    // Assert table updates
     expect(screen.queryByText("Middle East")).not.toBeInTheDocument();
   });
 

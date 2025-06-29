@@ -49,14 +49,11 @@ describe("ExamineeList", () => {
 
     const user = userEvent.setup();
 
-    // 1️⃣ Open the Group combobox (dropdown)
     const groupCombo = screen.getByRole("combobox", { name: /group/i });
     await user.click(groupCombo);
 
-    // 2️⃣ Click the "B" option in the dropdown
     await user.click(await screen.findByRole("option", { name: "B" }));
 
-    // 3️⃣ Assert the table only shows group B
     expect(screen.getByText("jane456")).toBeInTheDocument();
     expect(screen.queryByText("john123")).not.toBeInTheDocument();
   });
@@ -64,8 +61,9 @@ describe("ExamineeList", () => {
   it("shows modal when username clicked", async () => {
     render(<ExamineeList assessmentId="A1" />);
     await screen.findByText("john123");
-    // fireEvent.click still works fine for a button
+
     screen.getByText("john123").click();
+
     expect(await screen.findByText(/Student Details/)).toBeInTheDocument();
     expect(screen.getByText("John Doe (A)")).toBeInTheDocument();
     expect(screen.getByText("Close")).toBeInTheDocument();
