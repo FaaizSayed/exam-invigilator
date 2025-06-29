@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
-import type { Assessment } from "../types/assessment";
-import { fetchAssessments } from "../api/assessments";
-import AssessmentFilters from "./AssessmentFilters";
+import { useState, useEffect } from "react";
+import type { Exam } from "../types/assessment";
+import { getAssessments } from "../api/assessments";
+import Filters from "./AssessmentFilters";
 import Pagination from "./Pagination";
+import { useLanguage } from "../contexts/LanguageContext";
 import {
   Button,
   Snackbar,
@@ -21,14 +22,12 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { formatDate } from "../utils/date";
+import { format } from "../utils/date";
 import { Visibility, Sync, CheckCircle, Schedule, PlayArrow } from "@mui/icons-material";
 
-const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
+const PAGE_SIZE_OPTIONS = [10, 25, 50];
 
-const SYNC_DELAY = 2000;
-
-const getStatusIcon = (status: string) => {
+const getIcon = (status: string) => {
   switch (status) {
     case 'Completed':
       return <CheckCircle fontSize="small" color="success" />;
@@ -43,7 +42,7 @@ const getStatusIcon = (status: string) => {
   }
 };
 
-const getStatusColor = (status: string) => {
+const getColor = (status: string) => {
   switch (status) {
     case 'Completed':
       return 'success';
@@ -58,9 +57,10 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export default function AssessmentList() {
-  const [data, setData] = useState<Assessment[]>([]);
-  const [filtered, setFiltered] = useState<Assessment[]>([]);
+export default function AssessmentTable() {
+  const { t } = useLanguage();
+  const [data, setData] = useState<Exam[]>([]);
+  const [filtered, setFiltered] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [snackbar, setSnackbar] = useState<string | null>(null);
@@ -77,11 +77,11 @@ export default function AssessmentList() {
   useEffect(() => {
     let mounted = true;
     
-    const loadData = async () => {
+    const load = async () => {
       try {
         setLoading(true);
         setError(null);
-        const result = await fetchAssessments();
+        const result = await getAssessments();
         if (mounted) {
           setData(result);
         }
@@ -97,14 +97,14 @@ export default function AssessmentList() {
       }
     };
 
-    loadData();
+    load();
     
     return () => {
       mounted = false;
     };
   }, []);
 
-  const filteredData = useMemo(() => {
+  useEffect(() => {
     let result = data;
     
     if (filters.area) {
@@ -120,26 +120,19 @@ export default function AssessmentList() {
       result = result.filter((a) => a.status === filters.status);
     }
     
-    return result;
+    setFiltered(result);
+    setPage(1);
   }, [data, filters]);
 
-  useEffect(() => {
-    setFiltered(filteredData);
-    setPage(1);
-  }, [filteredData]);
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
-  const paginated = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return filtered.slice(start, start + pageSize);
-  }, [filtered, page, pageSize]);
-
-  const handleSync = useCallback(async (assessmentId: string) => {
+  const handleSync = async (assessmentId: string) => {
     if (syncingIds.has(assessmentId)) return;
     
     setSyncingIds(prev => new Set(prev).add(assessmentId));
     
     try {
-      await new Promise(resolve => setTimeout(resolve, SYNC_DELAY));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       setData(prev => prev.map(assessment => 
         assessment.id === assessmentId 
@@ -147,10 +140,10 @@ export default function AssessmentList() {
           : assessment
       ));
       
-      setSnackbar("Submissions synced successfully!");
+      setSnackbar(t('assessment.sync.success'));
     } catch (err) {
       console.error('Sync failed:', err);
-      setSnackbar("Failed to sync submissions. Please try again.");
+      setSnackbar(t('assessment.sync.failed'));
     } finally {
       setSyncingIds(prev => {
         const newSet = new Set(prev);
@@ -158,7 +151,7 @@ export default function AssessmentList() {
         return newSet;
       });
     }
-  }, [syncingIds]);
+  };
 
   if (loading) {
     return (
@@ -169,14 +162,14 @@ export default function AssessmentList() {
         alignItems="center" 
         minHeight="400px"
         sx={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          backgroundColor: '#f8fafc',
           borderRadius: 3,
-          color: 'white',
+          color: '#374151',
         }}
       >
-        <CircularProgress size={60} sx={{ color: 'white', mb: 2 }} />
+        <CircularProgress size={60} sx={{ color: '#6366f1', mb: 2 }} />
         <Typography variant="h6" sx={{ fontWeight: 500 }}>
-          Loading Assessments...
+          {t('assessment.loading')}
         </Typography>
       </Box>
     );
@@ -189,7 +182,6 @@ export default function AssessmentList() {
         sx={{ 
           mb: 2,
           borderRadius: 2,
-          '& .MuiAlert-icon': { fontSize: '2rem' },
         }}
       >
         <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
@@ -201,13 +193,13 @@ export default function AssessmentList() {
           onClick={() => window.location.reload()}
           sx={{ 
             mt: 1,
-            background: 'linear-gradient(45deg, #ef4444, #dc2626)',
+            backgroundColor: '#ef4444',
             '&:hover': {
-              background: 'linear-gradient(45deg, #dc2626, #b91c1c)',
+              backgroundColor: '#dc2626',
             }
           }}
         >
-          Retry
+          {t('assessment.retry')}
         </Button>
       </Alert>
     );
@@ -220,16 +212,16 @@ export default function AssessmentList() {
         sx={{ 
           p: 6, 
           textAlign: 'center',
-          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+          backgroundColor: '#f8fafc',
           borderRadius: 3,
           border: '2px dashed #cbd5e1',
         }}
       >
         <Typography variant="h5" sx={{ mb: 2, color: '#475569', fontWeight: 600 }}>
-          No assessments found
+          {t('assessment.no.found')}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 400, mx: 'auto' }}>
-          Try adjusting your filters or check back later for new assessments.
+          {t('assessment.no.found.desc')}
         </Typography>
       </Paper>
     );
@@ -244,7 +236,7 @@ export default function AssessmentList() {
           left: 0,
           right: 0,
           height: 200,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          backgroundColor: '#6366f1',
           borderRadius: '12px 12px 0 0',
           zIndex: 0,
         }}
@@ -255,7 +247,7 @@ export default function AssessmentList() {
         sx={{ 
           p: 3,
           borderRadius: 3,
-          background: 'rgba(255, 255, 255, 0.95)',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           position: 'relative',
@@ -267,25 +259,18 @@ export default function AssessmentList() {
             variant="h4" 
             sx={{ 
               mb: 1,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              color: '#6366f1',
               fontWeight: 700,
             }}
           >
-            Assessment Dashboard
+            {t('assessment.dashboard')}
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Manage and monitor your exam assessments
+            {t('assessment.manage')}
           </Typography>
         </Box>
 
-        <AssessmentFilters
-          data={data}
-          filters={filters}
-          setFilters={setFilters}
-        />
+        <Filters data={data} filters={filters} setFilters={setFilters} />
         
         {filtered.length === 0 && data.length > 0 && (
           <Alert 
@@ -293,24 +278,24 @@ export default function AssessmentList() {
             sx={{ 
               mb: 3,
               borderRadius: 2,
-              background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)',
+              backgroundColor: '#3b82f6',
               color: 'white',
               '& .MuiAlert-icon': { color: 'white' },
             }}
           >
-            No assessments match your current filters.
+            {t('assessment.no.match')}
           </Alert>
         )}
         
         <Table size="medium" sx={{ mb: 2 }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>Area</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>Assessment</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>Start Date</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>End Date</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('area')}</TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('name')}</TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('start.date')}</TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('end.date')}</TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('status')}</TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('actions')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -320,7 +305,7 @@ export default function AssessmentList() {
                 hover
                 sx={{
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #f8fafc, #f1f5f9)',
+                    backgroundColor: '#f8fafc',
                     transform: 'translateY(-1px)',
                     transition: 'all 0.2s ease-in-out',
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
@@ -344,33 +329,33 @@ export default function AssessmentList() {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body2" color="text.secondary">
-                    {formatDate(row.startDate)}
+                    {format(row.startDate)}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="body2" color="text.secondary">
-                    {formatDate(row.endDate)}
+                    {format(row.endDate)}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Box display="flex" alignItems="center" gap={1}>
-                    {getStatusIcon(row.status)}
+                    {getIcon(row.status)}
                     <Chip 
-                      label={row.status} 
-                      color={getStatusColor(row.status)}
+                      label={t(`status.${row.status.toLowerCase().replace(' ', '.')}`)} 
+                      color={getColor(row.status)}
                       size="small"
                       sx={{ 
                         fontWeight: 500,
                         '&.MuiChip-colorSuccess': {
-                          background: 'linear-gradient(45deg, #10b981, #059669)',
+                          backgroundColor: '#10b981',
                           color: 'white',
                         },
                         '&.MuiChip-colorPrimary': {
-                          background: 'linear-gradient(45deg, #6366f1, #4f46e5)',
+                          backgroundColor: '#6366f1',
                           color: 'white',
                         },
                         '&.MuiChip-colorWarning': {
-                          background: 'linear-gradient(45deg, #f59e0b, #d97706)',
+                          backgroundColor: '#f59e0b',
                           color: 'white',
                         },
                       }}
@@ -381,49 +366,40 @@ export default function AssessmentList() {
                   </Box>
                 </TableCell>
                 <TableCell>
-                  <Box display="flex" gap={1} alignItems="center">
-                    <Tooltip title="Monitor Examinees">
+                  <Box display="flex" gap={1}>
+                    <Tooltip title={t('assessment.view.submissions')}>
                       <IconButton
                         component={Link}
                         to={`/track-exam/${row.id}`}
                         size="small"
                         sx={{
-                          background: 'linear-gradient(45deg, #6366f1, #4f46e5)',
-                          color: 'white',
+                          color: '#6366f1',
                           '&:hover': {
-                            background: 'linear-gradient(45deg, #4f46e5, #3730a3)',
-                            transform: 'scale(1.05)',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
                           },
                         }}
                       >
-                        <Visibility fontSize="small" />
+                        <Visibility />
                       </IconButton>
                     </Tooltip>
-                    
-                    <Button
-                      size="small"
-                      onClick={() => handleSync(row.id)}
-                      disabled={row.status === "Synced" || syncingIds.has(row.id)}
-                      variant={row.status === "Synced" ? "outlined" : "contained"}
-                      startIcon={row.status === "Synced" ? <CheckCircle /> : <Sync />}
-                      sx={{
-                        ...(row.status === "Synced" ? {
-                          borderColor: '#10b981',
+                    <Tooltip title={t('assessment.sync')}>
+                      <IconButton
+                        onClick={() => handleSync(row.id)}
+                        disabled={syncingIds.has(row.id)}
+                        size="small"
+                        sx={{
                           color: '#10b981',
                           '&:hover': {
-                            borderColor: '#059669',
                             backgroundColor: 'rgba(16, 185, 129, 0.1)',
                           },
-                        } : {
-                          background: 'linear-gradient(45deg, #ec4899, #db2777)',
-                          '&:hover': {
-                            background: 'linear-gradient(45deg, #db2777, #be185d)',
+                          '&:disabled': {
+                            color: '#d1d5db',
                           },
-                        }),
-                      }}
-                    >
-                      {syncingIds.has(row.id) ? "Syncing..." : "Sync"}
-                    </Button>
+                        }}
+                      >
+                        <Sync />
+                      </IconButton>
+                    </Tooltip>
                   </Box>
                 </TableCell>
               </TableRow>
@@ -431,30 +407,30 @@ export default function AssessmentList() {
           </TableBody>
         </Table>
         
-        {filtered.length > 0 && (
-          <Pagination
-            count={filtered.length}
-            page={page}
-            pageSize={pageSize}
-            setPage={setPage}
-            setPageSize={setPageSize}
-            pageSizeOptions={PAGE_SIZE_OPTIONS}
-          />
-        )}
-        
-        <Snackbar
-          open={!!snackbar}
-          autoHideDuration={4000}
-          onClose={() => setSnackbar(null)}
-          message={snackbar}
-          sx={{
-            '& .MuiSnackbarContent-root': {
-              background: 'linear-gradient(45deg, #10b981, #059669)',
-              borderRadius: 2,
-            },
-          }}
+        <Pagination
+          count={filtered.length}
+          page={page}
+          pageSize={pageSize}
+          setPage={setPage}
+          setPageSize={setPageSize}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
         />
       </Paper>
+      
+      <Snackbar
+        open={!!snackbar}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={() => setSnackbar(null)} 
+          severity="success" 
+          sx={{ width: '100%' }}
+        >
+          {snackbar}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

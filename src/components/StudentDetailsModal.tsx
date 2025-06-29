@@ -32,9 +32,10 @@ type Props = {
 
 export default function StudentDetailsModal({ username, onClose }: Props) {
   const student = { ...mockStudent, username };
+  const isOpen = !!username;
 
   return (
-    <Dialog open={true} onClose={onClose} fullWidth>
+    <Dialog open={isOpen} onClose={onClose} fullWidth>
       <DialogTitle>Student Details - {student.username}</DialogTitle>
       <DialogContent>
         <Typography variant="subtitle1">

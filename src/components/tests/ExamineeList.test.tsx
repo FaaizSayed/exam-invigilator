@@ -4,14 +4,14 @@ import userEvent from "@testing-library/user-event";
 import ExamineeList from "../ExamineeList";
 import * as api from "../../api/examSubmissions";
 import "@testing-library/jest-dom";
-import type { ExamSubmission } from "../../types/examSubmission";
+import type { Submission } from "../../types/examSubmission";
 
-const mockSubmissions: ExamSubmission[] = [
+const mockSubmissions: Submission[] = [
   {
     id: "S1",
-    assessmentId: "A1",
     username: "john123",
     fullName: "John Doe",
+    area: "Engineering",
     group: "A",
     login: "2025-07-01T09:05:00Z",
     start: "2025-07-01T09:10:00Z",
@@ -21,9 +21,9 @@ const mockSubmissions: ExamSubmission[] = [
   },
   {
     id: "S2",
-    assessmentId: "A1",
     username: "jane456",
     fullName: "Jane Smith",
+    area: "Technology",
     group: "B",
     login: "2025-07-01T09:00:00Z",
     start: "2025-07-01T09:05:00Z",
@@ -33,7 +33,7 @@ const mockSubmissions: ExamSubmission[] = [
   },
 ];
 
-vi.spyOn(api, "fetchExamSubmissions").mockResolvedValue(mockSubmissions);
+vi.spyOn(api, "getExamSubmissions").mockResolvedValue(mockSubmissions);
 
 describe("ExamineeList", () => {
   it("renders examinee data", async () => {

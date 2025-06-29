@@ -5,10 +5,9 @@ import { MemoryRouter } from "react-router-dom";
 import AssessmentList from "../AssessmentList";
 import * as api from "../../api/assessments";
 import "@testing-library/jest-dom";
-import type { Assessment } from "../../types/assessment";
+import type { Exam } from "../../types/assessment";
 
-/* ---------- mock API data ---------- */
-const mockData: Assessment[] = [
+const mockData: Exam[] = [
   {
     id: "A1",
     area: "Middle East",
@@ -31,10 +30,8 @@ const mockData: Assessment[] = [
   },
 ];
 
-/* spy on the API and return the mock data instantly */
 vi.spyOn(api, "fetchAssessments").mockResolvedValue(mockData);
 
-/* handy helper – keeps each test DRY */
 const renderWithRouter = () =>
   render(
     <MemoryRouter>

@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import AssessmentFilters from "../AssessmentFilters";
 import "@testing-library/jest-dom";
-import type { Assessment } from "../../types/assessment";
+import type { Exam } from "../../types/assessment";
 
-const mockData: Assessment[] = [
+const mockData: Exam[] = [
   {
     id: "A1",
     area: "Asia",

@@ -1,24 +1,12 @@
-export function formatDate(date: string): string {
-  try {
-    const dateObj = new Date(date);
-    
-    if (isNaN(dateObj.getTime())) {
-      console.warn('Invalid date provided to formatDate:', date);
-      return 'Invalid Date';
-    }
-    
-    return dateObj.toLocaleString();
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'Invalid Date';
-  }
-}
+export const format = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
 
-/**
- * Formats a date for display in a more readable format
- * @param date - ISO date string
- * @returns Formatted date string
- */
 export function formatDateReadable(date: string): string {
   try {
     const dateObj = new Date(date);
@@ -45,11 +33,6 @@ export function formatDateReadable(date: string): string {
   }
 }
 
-/**
- * Checks if a date is in the past
- * @param date - ISO date string
- * @returns boolean
- */
 export function isPastDate(date: string): boolean {
   try {
     const dateObj = new Date(date);

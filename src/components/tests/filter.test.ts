@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
-import type { Assessment } from "../../types/assessment";
+import type { Exam } from "../../types/assessment";
 
-const assessments: Assessment[] = [
+const assessments: Exam[] = [
   { id: '1', area: 'Europe', program: 'MBA', course: 'AI', name: 'Test', startDate: '', endDate: '', status: 'Pending' },
   { id: '2', area: 'Asia', program: 'BSc', course: 'Math', name: 'Test2', startDate: '', endDate: '', status: 'Completed' }
 ];
 
-function filterByArea(data: Assessment[], area: string) {
+function filterByArea(data: Exam[], area: string) {
   return data.filter(a => a.area === area);
 }
 
