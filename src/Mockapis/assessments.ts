@@ -1,4 +1,4 @@
-import type { Exam } from '../types/assessment';
+import type { Exam } from '../types/exam';
 
 export const assessments: Exam[] = [
   {

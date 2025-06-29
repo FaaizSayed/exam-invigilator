@@ -5,7 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import AssessmentList from "../AssessmentList";
 import * as api from "../../Mockapis/assessments";
 import "@testing-library/jest-dom";
-import type { Exam } from "../../types/assessment";
+import type { Exam } from "../../types/exam";
 
 const mockData: Exam[] = [
   {

@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import ExamineeList from "../ExamineeList";
 import * as api from "../../Mockapis/examSubmissions";
 import "@testing-library/jest-dom";
-import type { Submission } from "../../types/examSubmission";
+import type { Submission } from "../../types/exam";
 
 const mockSubmissions: Submission[] = [
   {

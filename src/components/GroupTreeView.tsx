@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Exam } from "../types/assessment";
+import type { Exam } from "../types/exam";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
   Box,

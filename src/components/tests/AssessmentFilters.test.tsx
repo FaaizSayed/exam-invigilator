@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import AssessmentFilters from "../AssessmentFilters";
 import "@testing-library/jest-dom";
-import type { Exam } from "../../types/assessment";
+import type { Exam } from "../../types/exam";
 
 const mockData: Exam[] = [
   {

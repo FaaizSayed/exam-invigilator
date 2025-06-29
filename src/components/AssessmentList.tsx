@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Exam } from "../types/assessment";
+import type { Exam } from "../types/exam";
 import Filters from "./AssessmentFilters";
 import Pagination from "./Pagination";
 import { useLanguage } from "../contexts/LanguageContext";

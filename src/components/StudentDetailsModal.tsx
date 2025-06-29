@@ -9,7 +9,7 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import type { StudentDetails } from "../types/student";
+import type { StudentDetails } from "../types/exam";
 
 const mockStudent: StudentDetails = {
   username: "john123",

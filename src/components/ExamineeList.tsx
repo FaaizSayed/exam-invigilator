@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Submission } from "../types/examSubmission";
+import type { Submission } from "../types/exam";
 import ExamineeFilters from "./ExamineeFilters";
 import Pagination from "./Pagination";
 import StudentDetailsModal from "./StudentDetailsModal";

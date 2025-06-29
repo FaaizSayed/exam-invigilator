@@ -1,4 +1,4 @@
-import type { Submission } from '../types/examSubmission';
+import type { Submission } from '../types/exam';
 
 export const mockSubmissions: Submission[] = [
   {

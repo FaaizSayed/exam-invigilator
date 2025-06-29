@@ -4,7 +4,7 @@ import AssessmentTable from "../components/AssessmentList";
 import GroupTreeView from "../components/GroupTreeView";
 import { getAssessments } from "../Mockapis/assessments";
 import { useLanguage } from "../contexts/LanguageContext";
-import type { Exam } from "../types/assessment";
+import type { Exam } from "../types/exam";
 
 export default function DownloadedAssessments() {
   const { t } = useLanguage();
