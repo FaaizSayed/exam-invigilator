@@ -39,7 +39,3 @@ Automated tests for filtering, sorting, and key component rendering are included
 ```bash
 npm run test
 ```
-
-## License
-
-MIT License - see LICENSE file for details
