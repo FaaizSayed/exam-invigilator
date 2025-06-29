@@ -4,7 +4,7 @@ import { translations } from '../utils/translations';
 
 export type Language = 'en' | 'ar';
 
-interface LanguageContextType {
+type LanguageContextType = {
   language: Language;
   setLanguage: (lang: Language) => void;
   isRTL: boolean;
@@ -35,6 +35,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (context === undefined) {

@@ -1,4 +1,4 @@
-export interface StudentDetails {
+export type StudentDetails = {
     username: string;
     fullName: string;
     email: string;

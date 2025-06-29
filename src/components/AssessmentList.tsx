@@ -21,7 +21,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { format } from "../utils/date";
 import { Visibility, Sync, CheckCircle, Schedule, PlayArrow } from "@mui/icons-material";
 import { getAssessments } from "../Mockapis/assessments";
 
@@ -57,6 +56,15 @@ const getColor = (status: string) => {
   }
 };
 
+const format = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
 export default function AssessmentTable() {
   const { t } = useLanguage();
   const [data, setData] = useState<Exam[]>([]);
@@ -81,9 +89,9 @@ export default function AssessmentTable() {
       try {
         setLoading(true);
         setError(null);
-        const result = await getAssessments();
+        const results = await getAssessments();
         if (mounted) {
-          setData(result);
+          setData(results);
         }
       } catch (err) {
         if (mounted) {
@@ -105,22 +113,22 @@ export default function AssessmentTable() {
   }, []);
 
   useEffect(() => {
-    let result = data;
+    let results = data;
     
     if (filters.area) {
-      result = result.filter((a) => a.area === filters.area);
+      results = results.filter((result) => result.area === filters.area);
     }
     if (filters.program) {
-      result = result.filter((a) => a.program === filters.program);
+      results = results.filter((result) => result.program === filters.program);
     }
     if (filters.course) {
-      result = result.filter((a) => a.course === filters.course);
+      results = results.filter((result) => result.course === filters.course);
     }
     if (filters.status) {
-      result = result.filter((a) => a.status === filters.status);
+      results = results.filter((result) => result.status === filters.status);
     }
     
-    setFiltered(result);
+    setFiltered(results);
     setPage(1);
   }, [data, filters]);
 
