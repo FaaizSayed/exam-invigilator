@@ -1,13 +1,7 @@
-/**
- * Formats a date string to a localized string
- * @param date - ISO date string
- * @returns Formatted date string
- */
 export function formatDate(date: string): string {
   try {
     const dateObj = new Date(date);
     
-    // Handle invalid dates
     if (isNaN(dateObj.getTime())) {
       console.warn('Invalid date provided to formatDate:', date);
       return 'Invalid Date';
@@ -36,7 +30,6 @@ export function formatDateReadable(date: string): string {
     const now = new Date();
     const diffInHours = (now.getTime() - dateObj.getTime()) / (1000 * 60 * 60);
     
-    // Show relative time for recent dates
     if (diffInHours < 24) {
       if (diffInHours < 1) {
         const minutes = Math.floor(diffInHours * 60);

@@ -9,8 +9,7 @@ import {
   createTheme,
 } from "@mui/material";
 
-// TODO: Move theme configuration to separate file
-// FIXME: Add dark mode support
+
 const theme = createTheme({
   direction: "ltr",
   palette: {

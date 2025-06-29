@@ -22,7 +22,6 @@ import { formatDate } from "../utils/date";
 
 type Props = { assessmentId: string };
 
-// TODO: Move to constants
 const DEFAULT_PAGE_SIZE = 10;
 
 export default function ExamineeList({ assessmentId }: Props) {
@@ -40,10 +39,8 @@ export default function ExamineeList({ assessmentId }: Props) {
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [actionLoading, setActionLoading] = useState<Set<string>>(new Set());
 
-  // Load data with proper error handling
   useEffect(() => {
     let mounted = true;
-
     const loadData = async () => {
       try {
         setLoading(true);
@@ -54,10 +51,8 @@ export default function ExamineeList({ assessmentId }: Props) {
         }
       } catch (err) {
         if (mounted) {
-          console.error("Failed to load submissions:", err);
-          setError(
-            err instanceof Error ? err.message : "Failed to load submissions"
-          );
+          console.error('Failed to load submissions:', err);
+          setError(err instanceof Error ? err.message : "Failed to load submissions");
         }
       } finally {
         if (mounted) {
@@ -65,32 +60,26 @@ export default function ExamineeList({ assessmentId }: Props) {
         }
       }
     };
-
     loadData();
-
     return () => {
       mounted = false;
     };
   }, [assessmentId]);
 
-  // Memoized filtering logic
   const filteredData = useMemo(() => {
     let result = data;
-
     if (filters.group) {
       result = result.filter((a) => a.group === filters.group);
     }
     if (filters.examinee) {
-      result = result.filter(
-        (a) =>
-          a.username.toLowerCase().includes(filters.examinee.toLowerCase()) ||
-          a.fullName.toLowerCase().includes(filters.examinee.toLowerCase())
+      result = result.filter((a) => 
+        a.username.toLowerCase().includes(filters.examinee.toLowerCase()) ||
+        a.fullName.toLowerCase().includes(filters.examinee.toLowerCase())
       );
     }
     if (filters.status) {
       result = result.filter((a) => a.status === filters.status);
     }
-
     return result;
   }, [data, filters]);
 
@@ -104,72 +93,44 @@ export default function ExamineeList({ assessmentId }: Props) {
     return filtered.slice(start, start + pageSize);
   }, [filtered, page, pageSize]);
 
-  const handleAction = useCallback(
-    async (action: string, submissionId: string) => {
-      if (actionLoading.has(submissionId)) return;
-
-      setActionLoading((prev) => new Set(prev).add(submissionId));
-
-      try {
-        // Simulate API call
-        await new Promise((resolve) =>
-          setTimeout(resolve, 1000 + Math.random() * 500)
-        );
-
-        // Simulate occasional failures
-        if (Math.random() < 0.15) {
-          throw new Error(`${action} failed - please try again`);
-        }
-
-        // Update local state optimistically
-        setData((prev) =>
-          prev.map((submission) =>
-            submission.id === submissionId
-              ? { ...submission, status: "In Progress" as const }
-              : submission
-          )
-        );
-
-        console.log(`${action} completed for submission ${submissionId}`);
-      } catch (err) {
-        console.error(`${action} failed:`, err);
-        // In a real app, you'd show a toast notification here
-      } finally {
-        setActionLoading((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(submissionId);
-          return newSet;
-        });
+  const handleAction = useCallback(async (action: string, submissionId: string) => {
+    if (actionLoading.has(submissionId)) return;
+    setActionLoading(prev => new Set(prev).add(submissionId));
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 500));
+      if (Math.random() < 0.15) {
+        throw new Error(`${action} failed - please try again`);
       }
-    },
-    [actionLoading]
-  );
+      setData(prev => prev.map(submission => 
+        submission.id === submissionId 
+          ? { ...submission, status: 'In Progress' as const }
+          : submission
+      ));
+      console.log(`${action} completed for submission ${submissionId}`);
+    } catch (err) {
+      console.error(`${action} failed:`, err);
+    } finally {
+      setActionLoading(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(submissionId);
+        return newSet;
+      });
+    }
+  }, [actionLoading]);
 
-  const getStatusColor = (
-    status: string
-  ): "success" | "primary" | "warning" | "error" | "default" => {
+  const getStatusColor = (status: string): 'success' | 'primary' | 'warning' | 'error' | 'default' => {
     switch (status) {
-      case "Completed":
-        return "success";
-      case "In Progress":
-        return "primary";
-      case "Student Submission":
-        return "warning";
-      case "Absent":
-        return "error";
-      default:
-        return "default";
+      case 'Completed': return 'success';
+      case 'In Progress': return 'primary';
+      case 'Student Submission': return 'warning';
+      case 'Absent': return 'error';
+      default: return 'default';
     }
   };
 
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="200px"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
         <Typography>Loading submissions...</Typography>
       </Box>
     );
@@ -179,8 +140,8 @@ export default function ExamineeList({ assessmentId }: Props) {
     return (
       <Alert severity="error" sx={{ mb: 2 }}>
         <Typography variant="body2">{error}</Typography>
-        <Button
-          size="small"
+        <Button 
+          size="small" 
           onClick={() => window.location.reload()}
           sx={{ mt: 1 }}
         >
@@ -192,7 +153,7 @@ export default function ExamineeList({ assessmentId }: Props) {
 
   if (data.length === 0) {
     return (
-      <Paper elevation={3} sx={{ p: 4, textAlign: "center" }}>
+      <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
         <Typography variant="h6" color="text.secondary">
           No submissions found for this assessment
         </Typography>
@@ -203,13 +164,11 @@ export default function ExamineeList({ assessmentId }: Props) {
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
       <ExamineeFilters data={data} filters={filters} setFilters={setFilters} />
-
       {filtered.length === 0 && data.length > 0 && (
         <Alert severity="info" sx={{ mb: 2 }}>
           No submissions match your current filters.
         </Alert>
       )}
-
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -227,11 +186,11 @@ export default function ExamineeList({ assessmentId }: Props) {
           {paginated.map((row) => (
             <TableRow key={row.id} hover>
               <TableCell>
-                <Button
+                <Button 
                   onClick={() => setSelectedStudent(row.username)}
                   variant="text"
                   size="small"
-                  sx={{ textTransform: "none" }}
+                  sx={{ textTransform: 'none' }}
                 >
                   {row.username}
                 </Button>
@@ -240,16 +199,14 @@ export default function ExamineeList({ assessmentId }: Props) {
               <TableCell>{formatDate(row.login)}</TableCell>
               <TableCell>{formatDate(row.start)}</TableCell>
               <TableCell>
-                <Tooltip
-                  title={`${row.questionsSynced} questions synchronized`}
-                >
+                <Tooltip title={`${row.questionsSynced} questions synchronized`}>
                   <span>{row.questionsSynced}</span>
                 </Tooltip>
               </TableCell>
               <TableCell>{row.timeElapsed}</TableCell>
               <TableCell>
-                <Chip
-                  label={row.status}
+                <Chip 
+                  label={row.status} 
                   color={getStatusColor(row.status)}
                   size="small"
                 />
@@ -257,36 +214,32 @@ export default function ExamineeList({ assessmentId }: Props) {
               <TableCell>
                 {row.status === "Student Submission" && (
                   <Box display="flex" gap={1}>
-                    <Button
-                      size="small"
+                    <Button 
+                      size="small" 
                       color="primary"
                       disabled={actionLoading.has(row.id)}
-                      onClick={() => handleAction("Reset Timer", row.id)}
+                      onClick={() => handleAction('Reset Timer', row.id)}
                     >
-                      {actionLoading.has(row.id)
-                        ? "Resetting..."
-                        : "Reset Timer"}
+                      {actionLoading.has(row.id) ? 'Resetting...' : 'Reset Timer'}
                     </Button>
-                    <Button
-                      size="small"
+                    <Button 
+                      size="small" 
                       color="secondary"
                       disabled={actionLoading.has(row.id)}
-                      onClick={() => handleAction("Restart Session", row.id)}
+                      onClick={() => handleAction('Restart Session', row.id)}
                     >
                       Restart
                     </Button>
                   </Box>
                 )}
                 {row.status === "Absent" && (
-                  <Button
-                    size="small"
+                  <Button 
+                    size="small" 
                     color="warning"
                     disabled={actionLoading.has(row.id)}
-                    onClick={() => handleAction("Switch to Paper", row.id)}
+                    onClick={() => handleAction('Switch to Paper', row.id)}
                   >
-                    {actionLoading.has(row.id)
-                      ? "Switching..."
-                      : "Switch to Paper"}
+                    {actionLoading.has(row.id) ? 'Switching...' : 'Switch to Paper'}
                   </Button>
                 )}
                 {row.status === "Completed" && (
@@ -299,7 +252,6 @@ export default function ExamineeList({ assessmentId }: Props) {
           ))}
         </TableBody>
       </Table>
-
       {filtered.length > 0 && (
         <Pagination
           count={filtered.length}
@@ -309,7 +261,6 @@ export default function ExamineeList({ assessmentId }: Props) {
           setPageSize={setPageSize}
         />
       )}
-
       {selectedStudent && (
         <StudentDetailsModal
           username={selectedStudent}

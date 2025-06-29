@@ -20,7 +20,6 @@ export default function AssessmentFilters({
   filters,
   setFilters,
 }: Props) {
-  // Memoize filter options to prevent unnecessary re-renders
   const filterOptions = useMemo(() => {
     const areas = Array.from(new Set(data.map((a) => a.area))).sort();
     const programs = Array.from(new Set(data.map((a) => a.program))).sort();
@@ -37,7 +36,6 @@ export default function AssessmentFilters({
     [setFilters]
   );
 
-  // Show filter count
   const activeFiltersCount = Object.values(filters).filter(Boolean).length;
 
   return (

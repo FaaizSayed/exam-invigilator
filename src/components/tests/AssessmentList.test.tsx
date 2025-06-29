@@ -84,7 +84,6 @@ describe("AssessmentList", () => {
     ).toBeInTheDocument();
   });
 
-  // TODO: Add more edge case tests
   it("handles empty data gracefully", async () => {
     vi.spyOn(api, "fetchAssessments").mockResolvedValue([]);
 
@@ -109,7 +108,6 @@ describe("AssessmentList", () => {
     });
   });
 
-  // FIXME: This test is flaky sometimes
   it("disables sync button for already synced assessments", async () => {
     const syncedData = [{ ...mockData[0], status: "Synced" as const }];
     vi.spyOn(api, "fetchAssessments").mockResolvedValue(syncedData);

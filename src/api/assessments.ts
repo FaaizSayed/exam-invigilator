@@ -43,39 +43,15 @@ export const assessments: Assessment[] = [
   }
 ];
 
-// Simulate network failures and API errors
-const simulateNetworkIssues = () => {
-  const random = Math.random();
-  if (random < 0.05) {
-    throw new Error('Network timeout');
-  }
-  if (random < 0.1) {
-    throw new Error('Server error (500)');
-  }
-  if (random < 0.15) {
-    throw new Error('Unauthorized access');
-  }
-};
-
 export async function fetchAssessments(): Promise<Assessment[]> {
   try {
-    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 700));
-    
-    // Simulate occasional network issues
-    simulateNetworkIssues();
-    
-    // Simulate server-side filtering/sorting (realistic API behavior)
     const sortedAssessments = [...assessments].sort((a, b) => 
       new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
     );
-    
     return sortedAssessments;
   } catch (error) {
-    // Log error for debugging
     console.error('API Error:', error);
-    
-    // Re-throw with more context
     if (error instanceof Error) {
       throw new Error(`Failed to fetch assessments: ${error.message}`);
     }
@@ -83,16 +59,11 @@ export async function fetchAssessments(): Promise<Assessment[]> {
   }
 }
 
-// Additional API methods that might be needed
 export async function syncAssessment(assessmentId: string): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
-  
-  // Simulate sync failures
   if (Math.random() < 0.1) {
     throw new Error('Sync failed - server unavailable');
   }
-  
-  // Update local data (in real app, this would be server response)
   const assessment = assessments.find(a => a.id === assessmentId);
   if (assessment) {
     assessment.status = 'Synced';
@@ -101,7 +72,6 @@ export async function syncAssessment(assessmentId: string): Promise<void> {
 
 export async function getAssessmentById(id: string): Promise<Assessment | null> {
   await new Promise(resolve => setTimeout(resolve, 200));
-  
   const assessment = assessments.find(a => a.id === id);
   return assessment || null;
 }

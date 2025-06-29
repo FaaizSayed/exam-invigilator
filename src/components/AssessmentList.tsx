@@ -22,7 +22,6 @@ import { formatDate } from "../utils/date";
 
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
-// TODO: Move to constants file
 const SYNC_DELAY = 2000;
 
 export default function AssessmentList() {
@@ -41,7 +40,6 @@ export default function AssessmentList() {
     status: "",
   });
 
-  // FIXME: This should be in a custom hook
   useEffect(() => {
     let mounted = true;
 
@@ -74,7 +72,6 @@ export default function AssessmentList() {
     };
   }, []);
 
-  // Performance optimization - memoize filter logic
   const filteredData = useMemo(() => {
     let result = data;
 
@@ -111,10 +108,8 @@ export default function AssessmentList() {
       setSyncingIds((prev) => new Set(prev).add(assessmentId));
 
       try {
-        // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, SYNC_DELAY));
 
-        // Update local state optimistically
         setData((prev) =>
           prev.map((assessment) =>
             assessment.id === assessmentId
