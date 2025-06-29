@@ -32,32 +32,6 @@ npm install
 npm run dev
 ```
 
-## Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for development
-- `npm run build:prod` - Build for production
-- `npm run test` - Run tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Run tests with coverage
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
-- `npm run type-check` - Run TypeScript type checking
-- `npm run format` - Format code with Prettier
-
-## Project Structure
-
-```
-src/
-├── api/           # API layer and mock data
-├── components/    # Reusable UI components
-├── hooks/         # Custom React hooks
-├── pages/         # Page components
-├── types/         # TypeScript type definitions
-├── utils/         # Utility functions
-└── tests/         # Test files
-```
-
 ## Testing
 
 Automated tests for filtering, sorting, and key component rendering are included.
@@ -65,31 +39,6 @@ Automated tests for filtering, sorting, and key component rendering are included
 ```bash
 npm run test
 ```
-
-## TODO
-
-- [ ] Add error boundaries
-- [ ] Implement real-time updates with WebSocket
-- [ ] Add dark mode support
-- [ ] Improve accessibility
-- [ ] Add more comprehensive tests
-- [ ] Set up CI/CD pipeline
-- [ ] Add performance monitoring
-
-## Known Issues
-
-- Some edge cases in date formatting (see utils/date.ts)
-- Occasional flaky tests (marked with FIXME)
-- Missing 404 route handling
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Run linting and tests
-6. Submit a pull request
 
 ## License
 
