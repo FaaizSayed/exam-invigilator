@@ -9,8 +9,23 @@ import {
   createTheme,
 } from "@mui/material";
 
+// TODO: Move theme configuration to separate file
+// FIXME: Add dark mode support
 const theme = createTheme({
   direction: "ltr",
+  palette: {
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#dc004e",
+    },
+  },
+  typography: {
+    h4: {
+      fontWeight: 600,
+    },
+  },
 });
 
 function App() {
@@ -18,6 +33,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
+        {/* TODO: Add error boundary */}
         <Container maxWidth="lg" style={{ padding: "2rem 0" }}>
           <Routes>
             <Route path="/" element={<DownloadedAssessments />} />
@@ -25,6 +41,7 @@ function App() {
               path="/track-exam/:assessmentId"
               element={<TrackExamSubmissions />}
             />
+            {/* TODO: Add 404 route */}
           </Routes>
         </Container>
       </Router>

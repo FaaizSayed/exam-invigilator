@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import AssessmentList from "../AssessmentList";
@@ -43,6 +43,10 @@ const renderWithRouter = () =>
   );
 
 describe("AssessmentList", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("renders table with data", async () => {
     renderWithRouter();
 
@@ -75,6 +79,57 @@ describe("AssessmentList", () => {
 
     fireEvent.click(syncButton);
 
-    expect(await screen.findByText("Submissions synced!")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Submissions synced successfully!")
+    ).toBeInTheDocument();
+  });
+
+  // TODO: Add more edge case tests
+  it("handles empty data gracefully", async () => {
+    vi.spyOn(api, "fetchAssessments").mockResolvedValue([]);
+
+    renderWithRouter();
+
+    await waitFor(() => {
+      expect(screen.getByText("No assessments found")).toBeInTheDocument();
+    });
+  });
+
+  it("shows error state when API fails", async () => {
+    vi.spyOn(api, "fetchAssessments").mockRejectedValue(
+      new Error("Network error")
+    );
+
+    renderWithRouter();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Failed to load assessments/)
+      ).toBeInTheDocument();
+    });
+  });
+
+  // FIXME: This test is flaky sometimes
+  it("disables sync button for already synced assessments", async () => {
+    const syncedData = [{ ...mockData[0], status: "Synced" as const }];
+    vi.spyOn(api, "fetchAssessments").mockResolvedValue(syncedData);
+
+    renderWithRouter();
+
+    await screen.findByText("AI Midterm 2025");
+    const syncButton = screen.getByText("Sync Submissions");
+
+    expect(syncButton).toBeDisabled();
+  });
+
+  it("shows loading state during sync", async () => {
+    renderWithRouter();
+
+    await screen.findByText("AI Midterm 2025");
+    const syncButton = screen.getAllByText("Sync Submissions")[0];
+
+    fireEvent.click(syncButton);
+
+    expect(screen.getByText("Syncing...")).toBeInTheDocument();
   });
 });
