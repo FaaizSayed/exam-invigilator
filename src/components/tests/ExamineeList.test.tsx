@@ -2,7 +2,7 @@ import { vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ExamineeList from "../ExamineeList";
-import * as api from "../../api/examSubmissions";
+import * as api from "../../Mockapis/examSubmissions";
 import "@testing-library/jest-dom";
 import type { Submission } from "../../types/examSubmission";
 

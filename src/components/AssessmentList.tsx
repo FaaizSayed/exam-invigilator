@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import type { Exam } from "../types/assessment";
-import { getAssessments } from "../api/assessments";
 import Filters from "./AssessmentFilters";
 import Pagination from "./Pagination";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -24,6 +23,7 @@ import {
 import { Link } from "react-router-dom";
 import { format } from "../utils/date";
 import { Visibility, Sync, CheckCircle, Schedule, PlayArrow } from "@mui/icons-material";
+import { getAssessments } from "../Mockapis/assessments";
 
 const PAGE_SIZE_OPTIONS = [10, 25, 50];
 

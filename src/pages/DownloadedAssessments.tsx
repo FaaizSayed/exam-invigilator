@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Box, Tabs, Tab } from "@mui/material";
 import AssessmentTable from "../components/AssessmentList";
 import GroupTreeView from "../components/GroupTreeView";
-import { getAssessments } from "../api/assessments";
+import { getAssessments } from "../Mockapis/assessments";
 import { useLanguage } from "../contexts/LanguageContext";
 import type { Exam } from "../types/assessment";
 

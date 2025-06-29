@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import type { Submission } from "../types/examSubmission";
-import { getExamSubmissions } from "../api/examSubmissions";
 import ExamineeFilters from "./ExamineeFilters";
 import Pagination from "./Pagination";
 import StudentDetailsModal from "./StudentDetailsModal";
@@ -23,6 +22,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { Person, Refresh, RestartAlt, Description } from "@mui/icons-material";
+import { getExamSubmissions } from "../Mockapis/examSubmissions";
 
 const DEFAULT_PAGE_SIZE = 10;
 

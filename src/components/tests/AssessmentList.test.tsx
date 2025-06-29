@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import AssessmentList from "../AssessmentList";
-import * as api from "../../api/assessments";
+import * as api from "../../Mockapis/assessments";
 import "@testing-library/jest-dom";
 import type { Exam } from "../../types/assessment";
 
