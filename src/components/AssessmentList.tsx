@@ -71,7 +71,7 @@ export default function AssessmentTable() {
   const [filtered, setFiltered] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [snackbar, setSnackbar] = useState<string | null>(null);
+  const [notification, setNotification] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [syncingIds, setSyncingIds] = useState<Set<string>>(new Set());
@@ -148,10 +148,10 @@ export default function AssessmentTable() {
           : assessment
       ));
       
-      setSnackbar(t('assessment.sync.success'));
+      setNotification(t('assessment.sync.success'));
     } catch (err) {
       console.error('Sync failed:', err);
-      setSnackbar(t('assessment.sync.failed'));
+      setNotification(t('assessment.sync.failed'));
     } finally {
       setSyncingIds(prev => {
         const newSet = new Set(prev);
@@ -426,17 +426,17 @@ export default function AssessmentTable() {
       </Paper>
       
       <Snackbar
-        open={!!snackbar}
+        open={!!notification}
         autoHideDuration={4000}
-        onClose={() => setSnackbar(null)}
+        onClose={() => setNotification(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert 
-          onClose={() => setSnackbar(null)} 
+          onClose={() => setNotification(null)} 
           severity="success" 
           sx={{ width: '100%' }}
         >
-          {snackbar}
+          {notification}
         </Alert>
       </Snackbar>
     </Box>
