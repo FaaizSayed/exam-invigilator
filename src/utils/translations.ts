@@ -19,7 +19,7 @@ export const translations = {
     'assessment.sync.success': 'Submissions synced successfully!',
     'assessment.sync.failed': 'Failed to sync submissions. Please try again.',
     
-    'student.submissions': 'Student Submissions',
+    'student.submissions': 'Students Submission',
     'student.monitor': 'Monitor and manage student exam progress',
     'student.no.found': 'No submissions found for this assessment',
     'student.no.found.desc': 'Students will appear here once they start their exam.',
