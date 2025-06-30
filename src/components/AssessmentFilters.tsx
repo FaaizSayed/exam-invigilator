@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { Exam } from "../types/exam";
 import { useLanguage } from "../contexts/LanguageContext";
 import { 
@@ -26,13 +27,35 @@ type Props = {
 
 export default function Filters({ data, filters, setFilters }: Props) {
   const { t } = useLanguage();
+  const [activeFilters, setActiveFilters] = useState(0)
 
-  const areas = [...new Set(data.map(item => item.area))].sort();
-  const programs = [...new Set(data.map(item => item.program))].sort();
-  const courses = [...new Set(data.map(item => item.course))].sort();
-  const statuses = [...new Set(data.map(item => item.status))].sort();
+  const getUniqueSorted = (arr: string[]) => {
+    const unique: string[] = [];
+    for (const item of arr) {
+      if (!unique.includes(item)) {
+        unique.push(item);
+      }
+    }
+    return unique.sort();
+  };
+  
+  const areas = getUniqueSorted(data.map(d => d.area));
+  const programs = getUniqueSorted(data.map(d => d.program));
+  const courses = getUniqueSorted(data.map(d => d.course));
+  const statuses = getUniqueSorted(data.map(d => d.status));  
 
-  const activeFilters = Object.values(filters).filter(Boolean).length;
+  useEffect(() => {
+    let count = 0;
+  
+    for (const key in filters) {
+      const filterKey = key as keyof typeof filters;
+      if (filters[filterKey] !== "") {
+        count++;
+      }
+    }
+  
+    setActiveFilters(count);
+  }, [filters]);
 
   const clearAll = () => {
     setFilters({
