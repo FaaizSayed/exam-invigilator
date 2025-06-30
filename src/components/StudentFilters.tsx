@@ -1,18 +1,20 @@
-import type { Submission } from "../types/exam";
-import { useLanguage } from "../contexts/LanguageContext";
-import { 
-  Box, 
-  TextField, 
-  MenuItem, 
-  Stack, 
+import type { Submission } from '../types/exam';
+import { useLanguage } from '../contexts/LanguageContext';
+import {
+  Box,
+  TextField,
+  MenuItem,
+  Stack,
   Typography,
   Autocomplete,
   Chip,
-  IconButton
-} from "@mui/material";
-import { FilterList, Clear, Search } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { getUniqueSorted } from "../utils/helper";
+  IconButton,
+} from '@mui/material';
+import { FilterList, Clear, Search } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { buildProgramTree, getUniqueSorted } from '../utils/helper';
+import GroupTreeDropdown from './GroupTreeDropdown';
+import { mockAssessments } from '../Mockapis/assessments';
 
 type Filters = {
   area: string;
@@ -27,38 +29,36 @@ type Props = {
   setFilters: (filters: Filters | ((prev: Filters) => Filters)) => void;
 };
 
-export default function StudentFilters({
-  data,
-  filters,
-  setFilters,
-}: Props) {
+export default function StudentFilters({ data, filters, setFilters }: Props) {
   const { t } = useLanguage();
-  const [activeFilters, setActiveFilters] = useState(0)
-  
+  const [activeFilters, setActiveFilters] = useState(0);
+
   const areas = getUniqueSorted(data.map(item => item.area));
-  const groups = getUniqueSorted(data.map(item => item.group));
+  // const groups = getUniqueSorted(data.map(item => item.group));
   const examinees = getUniqueSorted(data.map(item => item.fullName));
   const statuses = getUniqueSorted(data.map(item => item.status));
 
-   useEffect(() => {
-      let count = 0;
-    
-      for (const key in filters) {
-        const filterKey = key as keyof typeof filters;
-        if (filters[filterKey] !== "") {
-          count++;
-        }
+  useEffect(() => {
+    let count = 0;
+
+    for (const key in filters) {
+      const filterKey = key as keyof typeof filters;
+      if (filters[filterKey] !== '') {
+        count++;
       }
-    
-      setActiveFilters(count);
-    }, [filters]);
+    }
+
+    setActiveFilters(count);
+  }, [filters]);
+
+  const programTree = buildProgramTree(mockAssessments);
 
   const clearAll = () => {
     setFilters({
-      area: "",
-      group: "",
-      examinee: "",
-      status: "",
+      area: '',
+      group: '',
+      examinee: '',
+      status: '',
     });
   };
 
@@ -72,11 +72,11 @@ export default function StudentFilters({
           </Typography>
         </Box>
         {activeFilters > 0 && (
-          <Chip 
+          <Chip
             label={`${activeFilters} ${t('filters.active')} ${t('filters.applied')}`}
             color="primary"
             size="small"
-            sx={{ 
+            sx={{
               background: 'linear-gradient(45deg, #ec4899, #db2777)',
               color: 'white',
               fontWeight: 500,
@@ -98,45 +98,41 @@ export default function StudentFilters({
           </IconButton>
         )}
       </Box>
-      
+
       <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', gap: 2 }}>
         <TextField
           select
           label={t('filters.area')}
           value={filters.area}
-          onChange={(e) => setFilters(prev => ({ ...prev, area: e.target.value }))}
+          onChange={e =>
+            setFilters(prev => ({ ...prev, area: e.target.value }))
+          }
           size="small"
           sx={{ minWidth: 150 }}
         >
           <MenuItem value="">{t('filters.all.areas')}</MenuItem>
-          {areas.map((area) => (
+          {areas.map(area => (
             <MenuItem key={area} value={area}>
               {area}
             </MenuItem>
           ))}
         </TextField>
-        
-        <TextField
-          select
-          label={t('filters.group')}
+
+        <GroupTreeDropdown
           value={filters.group}
-          onChange={(e) => setFilters(prev => ({ ...prev, group: e.target.value }))}
-          size="small"
-          sx={{ minWidth: 150 }}
-        >
-          <MenuItem value="">{t('filters.all.groups')}</MenuItem>
-          {groups.map((group) => (
-            <MenuItem key={group} value={group}>
-              {group}
-            </MenuItem>
-          ))}
-        </TextField>
-        
+          onChange={v => setFilters(prev => ({ ...prev, group: v }))}
+          label={t('filters.group')}
+          placeholder={t('filters.all.groups')}
+          treeData={programTree}
+        />
+
         <Autocomplete
           options={examinees}
           value={filters.examinee}
-          onChange={(_, newValue) => setFilters(prev => ({ ...prev, examinee: newValue || "" }))}
-          renderInput={(params) => (
+          onChange={(_, newValue) =>
+            setFilters(prev => ({ ...prev, examinee: newValue || '' }))
+          }
+          renderInput={params => (
             <TextField
               {...params}
               label={t('filters.examinee')}
@@ -149,17 +145,19 @@ export default function StudentFilters({
             />
           )}
         />
-        
+
         <TextField
           select
           label={t('filters.status')}
           value={filters.status}
-          onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+          onChange={e =>
+            setFilters(prev => ({ ...prev, status: e.target.value }))
+          }
           size="small"
           sx={{ minWidth: 150 }}
         >
           <MenuItem value="">{t('filters.all.statuses')}</MenuItem>
-          {statuses.map((status) => (
+          {statuses.map(status => (
             <MenuItem key={status} value={status}>
               {t(`status.${status.toLowerCase().replace(' ', '.')}`)}
             </MenuItem>
