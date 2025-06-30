@@ -23,13 +23,17 @@ type Filters = {
   status: string;
 };
 
-type Props = {
+type StudentFiltersProps = {
   data: Submission[];
   filters: Filters;
   setFilters: (filters: Filters | ((prev: Filters) => Filters)) => void;
 };
 
-export default function StudentFilters({ data, filters, setFilters }: Props) {
+export default function StudentFilters({
+  data,
+  filters,
+  setFilters,
+}: StudentFiltersProps) {
   const { t } = useLanguage();
   const [activeFilters, setActiveFilters] = useState(0);
 

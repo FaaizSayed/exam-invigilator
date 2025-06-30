@@ -20,13 +20,13 @@ type Filters = {
   status: string;
 };
 
-type Props = {
+type FiltersProps = {
   data: Exam[];
   filters: Filters;
   setFilters: (filters: Filters | ((prev: Filters) => Filters)) => void;
 };
 
-export default function Filters({ data, filters, setFilters }: Props) {
+export default function Filters({ data, filters, setFilters }: FiltersProps) {
   const { t } = useLanguage();
   const [activeFilters, setActiveFilters] = useState(0);
 

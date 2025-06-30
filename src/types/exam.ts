@@ -10,6 +10,9 @@ export type Exam = {
 };
 
 export type Submission = {
+  email?: string;
+  sessionHealth?: string;
+  loginLogoutTimeline?: [];
   id: string;
   username: string;
   fullName: string;
@@ -21,14 +24,12 @@ export type Submission = {
   timeElapsed: number;
   status: 'Completed' | 'In Progress' | 'Student Submission' | 'Absent';
 };
-  
+
 export type StudentDetails = {
   username: string;
   fullName: string;
   email: string;
   group: string;
-  sessionHealth: "Good" | "Warning" | "Critical";
-  loginLogoutTimeline: { time: string; action: "login" | "logout" }[];
-}
-
-  
+  sessionHealth: 'Good' | 'Warning' | 'Critical';
+  loginLogoutTimeline: { time: string; action: 'login' | 'logout' }[];
+};

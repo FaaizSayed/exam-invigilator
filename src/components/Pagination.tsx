@@ -1,8 +1,8 @@
-import { Box, TablePagination, IconButton } from "@mui/material";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { useLanguage } from "../contexts/LanguageContext";
+import { Box, TablePagination, IconButton } from '@mui/material';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+import { useLanguage } from '../contexts/LanguageContext';
 
-type Props = {
+type PaginationProps = {
   count: number;
   page: number;
   pageSize: number;
@@ -18,7 +18,7 @@ export default function Pagination({
   setPage,
   setPageSize,
   pageSizeOptions = [10, 25, 50, 100],
-}: Props) {
+}: PaginationProps) {
   const { t, language } = useLanguage();
   const isRTL = language === 'ar';
 
@@ -46,10 +46,10 @@ export default function Pagination({
         page={page - 1}
         onPageChange={(_, newPage) => setPage(newPage + 1)}
         rowsPerPage={pageSize}
-        onRowsPerPageChange={(e) => setPageSize(parseInt(e.target.value, 10))}
+        onRowsPerPageChange={e => setPageSize(parseInt(e.target.value, 10))}
         rowsPerPageOptions={pageSizeOptions}
         labelRowsPerPage={t('rows.per.page')}
-        labelDisplayedRows={({ from, to, count }) => 
+        labelDisplayedRows={({ from, to, count }) =>
           `${t('pagination.showing')} ${from}-${to} ${t('pagination.of')} ${count}`
         }
         dir={isRTL ? 'rtl' : 'ltr'}
@@ -60,8 +60,7 @@ export default function Pagination({
               disabled={page === 0}
               aria-label="first page"
               sx={{ color: '#6366f1' }}
-            >
-            </IconButton>
+            ></IconButton>
             <IconButton
               onClick={handleBackButtonClick}
               disabled={page === 0}
@@ -83,8 +82,7 @@ export default function Pagination({
               disabled={page >= Math.ceil(count / rowsPerPage) - 1}
               aria-label="last page"
               sx={{ color: '#6366f1' }}
-            >
-            </IconButton>
+            ></IconButton>
           </Box>
         )}
         sx={{
