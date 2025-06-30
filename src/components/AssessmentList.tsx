@@ -375,7 +375,7 @@ export default function AssessmentTable() {
                 </TableCell>
                 <TableCell>
                   <Box display="flex" gap={1}>
-                    <Tooltip title={t('assessment.view.submissions')}>
+                    <Tooltip title={t('assessment.monitor')}>
                       <IconButton
                         component={Link}
                         to={`/track-exam/${row.id}`}
