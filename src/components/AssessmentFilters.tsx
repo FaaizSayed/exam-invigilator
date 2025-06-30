@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
-import type { Exam } from "../types/exam";
-import { useLanguage } from "../contexts/LanguageContext";
-import { 
-  Box, 
-  TextField, 
-  MenuItem, 
-  Stack, 
+import { useEffect, useState } from 'react';
+import type { Exam } from '../types/exam';
+import { useLanguage } from '../contexts/LanguageContext';
+import {
+  Box,
+  TextField,
+  MenuItem,
+  Stack,
   Typography,
   Chip,
-  IconButton
-} from "@mui/material";
-import { FilterList, Clear } from "@mui/icons-material";
+  IconButton,
+} from '@mui/material';
+import { FilterList, Clear } from '@mui/icons-material';
+import { getUniqueSorted } from '../utils/helper';
 
 type Filters = {
   area: string;
@@ -27,42 +28,32 @@ type Props = {
 
 export default function Filters({ data, filters, setFilters }: Props) {
   const { t } = useLanguage();
-  const [activeFilters, setActiveFilters] = useState(0)
+  const [activeFilters, setActiveFilters] = useState(0);
 
-  const getUniqueSorted = (arr: string[]) => {
-    const unique: string[] = [];
-    for (const item of arr) {
-      if (!unique.includes(item)) {
-        unique.push(item);
-      }
-    }
-    return unique.sort();
-  };
-  
-  const areas = getUniqueSorted(data.map(d => d.area));
-  const programs = getUniqueSorted(data.map(d => d.program));
-  const courses = getUniqueSorted(data.map(d => d.course));
-  const statuses = getUniqueSorted(data.map(d => d.status));  
+  const areas = getUniqueSorted(data.map(item => item.area));
+  const programs = getUniqueSorted(data.map(item => item.program));
+  const courses = getUniqueSorted(data.map(item => item.course));
+  const statuses = getUniqueSorted(data.map(item => item.status));
 
   useEffect(() => {
     let count = 0;
-  
+
     for (const key in filters) {
       const filterKey = key as keyof typeof filters;
-      if (filters[filterKey] !== "") {
+      if (filters[filterKey] !== '') {
         count++;
       }
     }
-  
+
     setActiveFilters(count);
   }, [filters]);
 
   const clearAll = () => {
     setFilters({
-      area: "",
-      program: "",
-      course: "",
-      status: "",
+      area: '',
+      program: '',
+      course: '',
+      status: '',
     });
   };
 
@@ -76,11 +67,11 @@ export default function Filters({ data, filters, setFilters }: Props) {
           </Typography>
         </Box>
         {activeFilters > 0 && (
-          <Chip 
+          <Chip
             label={`${activeFilters} ${t('filters.active')} ${t('filters.applied')}`}
             color="primary"
             size="small"
-            sx={{ 
+            sx={{
               background: 'linear-gradient(45deg, #6366f1, #4f46e5)',
               color: 'white',
               fontWeight: 500,
@@ -108,12 +99,14 @@ export default function Filters({ data, filters, setFilters }: Props) {
           select
           label={t('filters.area')}
           value={filters.area}
-          onChange={(e) => setFilters(prev => ({ ...prev, area: e.target.value }))}
+          onChange={e =>
+            setFilters(prev => ({ ...prev, area: e.target.value }))
+          }
           size="small"
           sx={{ minWidth: 150 }}
         >
           <MenuItem value="">{t('filters.all.areas')}</MenuItem>
-          {areas.map((area) => (
+          {areas.map(area => (
             <MenuItem key={area} value={area}>
               {area}
             </MenuItem>
@@ -124,12 +117,14 @@ export default function Filters({ data, filters, setFilters }: Props) {
           select
           label={t('filters.program')}
           value={filters.program}
-          onChange={(e) => setFilters(prev => ({ ...prev, program: e.target.value }))}
+          onChange={e =>
+            setFilters(prev => ({ ...prev, program: e.target.value }))
+          }
           size="small"
           sx={{ minWidth: 150 }}
         >
           <MenuItem value="">{t('filters.all.groups')}</MenuItem>
-          {programs.map((program) => (
+          {programs.map(program => (
             <MenuItem key={program} value={program}>
               {program}
             </MenuItem>
@@ -140,12 +135,14 @@ export default function Filters({ data, filters, setFilters }: Props) {
           select
           label={t('filters.course')}
           value={filters.course}
-          onChange={(e) => setFilters(prev => ({ ...prev, course: e.target.value }))}
+          onChange={e =>
+            setFilters(prev => ({ ...prev, course: e.target.value }))
+          }
           size="small"
           sx={{ minWidth: 150 }}
         >
           <MenuItem value="">{t('filters.all.groups')}</MenuItem>
-          {courses.map((course) => (
+          {courses.map(course => (
             <MenuItem key={course} value={course}>
               {course}
             </MenuItem>
@@ -156,12 +153,14 @@ export default function Filters({ data, filters, setFilters }: Props) {
           select
           label={t('filters.status')}
           value={filters.status}
-          onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+          onChange={e =>
+            setFilters(prev => ({ ...prev, status: e.target.value }))
+          }
           size="small"
           sx={{ minWidth: 150 }}
         >
           <MenuItem value="">{t('filters.all.statuses')}</MenuItem>
-          {statuses.map((status) => (
+          {statuses.map(status => (
             <MenuItem key={status} value={status}>
               {t(`status.${status.toLowerCase().replace(' ', '.')}`)}
             </MenuItem>

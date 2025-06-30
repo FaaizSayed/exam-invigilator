@@ -11,6 +11,8 @@ import {
   IconButton
 } from "@mui/material";
 import { FilterList, Clear, Search } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { getUniqueSorted } from "../utils/helper";
 
 type Filters = {
   area: string;
@@ -25,18 +27,31 @@ type Props = {
   setFilters: (filters: Filters | ((prev: Filters) => Filters)) => void;
 };
 
-export default function ExamineeFilters({
+export default function StudentFilters({
   data,
   filters,
   setFilters,
 }: Props) {
   const { t } = useLanguage();
-  const areas = [...new Set(data.map(item => item.area))].sort();
-  const groups = [...new Set(data.map(item => item.group))].sort();
-  const examinees = [...new Set(data.map(item => item.fullName))].sort();
-  const statuses = [...new Set(data.map(item => item.status))].sort();
+  const [activeFilters, setActiveFilters] = useState(0)
   
-  const activeFilters = Object.values(filters).filter(Boolean).length;
+  const areas = getUniqueSorted(data.map(item => item.area));
+  const groups = getUniqueSorted(data.map(item => item.group));
+  const examinees = getUniqueSorted(data.map(item => item.fullName));
+  const statuses = getUniqueSorted(data.map(item => item.status));
+
+   useEffect(() => {
+      let count = 0;
+    
+      for (const key in filters) {
+        const filterKey = key as keyof typeof filters;
+        if (filters[filterKey] !== "") {
+          count++;
+        }
+      }
+    
+      setActiveFilters(count);
+    }, [filters]);
 
   const clearAll = () => {
     setFilters({
@@ -51,7 +66,7 @@ export default function ExamineeFilters({
     <Box sx={{ mb: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <FilterList sx={{ color: '#ec4899' }} />
+          <FilterList sx={{ color: '#6366f1' }} />
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             {t('filters.title')}
           </Typography>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Submission } from "../types/exam";
-import ExamineeFilters from "./ExamineeFilters";
+import StudentFilters from "./StudentFilters";
 import Pagination from "./Pagination";
 import StudentDetailsModal from "./StudentDetailsModal";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -259,7 +259,7 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
             variant="h4" 
             sx={{ 
               mb: 1,
-              color: '#333333',
+              color: '#6366f1',
               fontWeight: 700,
             }}
           >
@@ -270,7 +270,7 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
           </Typography>
         </Box>
 
-        <ExamineeFilters data={data} filters={filters} setFilters={setFilters} />
+        <StudentFilters data={data} filters={filters} setFilters={setFilters} />
         
         {filtered.length === 0 && data.length > 0 && (
           <Alert 
