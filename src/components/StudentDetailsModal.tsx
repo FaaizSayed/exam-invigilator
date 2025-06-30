@@ -8,59 +8,82 @@ import {
   List,
   ListItem,
   ListItemText,
-} from "@mui/material";
-import type { StudentDetails } from "../types/exam";
+} from '@mui/material';
+import type { Submission } from '../types/exam';
 
-const mockStudent: StudentDetails = {
-  username: "john123",
-  fullName: "John Doe",
-  email: "john123@exam.com",
-  group: "A",
-  sessionHealth: "Good",
-  loginLogoutTimeline: [
-    { time: "2025-07-01T09:05:00Z", action: "login" },
-    { time: "2025-07-01T10:10:00Z", action: "logout" },
-    { time: "2025-07-01T10:20:00Z", action: "login" },
-    { time: "2025-07-01T12:00:00Z", action: "logout" },
-  ],
-};
-
-type Props = {
-  username: string;
+type StudentDetailsModalProps = {
+  studentDetails?: Submission;
   onClose: () => void;
 };
 
-export default function StudentDetailsModal({ username, onClose }: Props) {
-  const student = { ...mockStudent, username };
-  const isOpen = !!username;
+export default function StudentDetailsModal({
+  studentDetails,
+  onClose,
+}: StudentDetailsModalProps) {
+  const isOpen = !!studentDetails;
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth>
-      <DialogTitle>Student Details - {student.username}</DialogTitle>
+      <DialogTitle>
+        Student Details{studentDetails ? ` – ${studentDetails.username}` : ''}
+      </DialogTitle>
       <DialogContent>
-        <Typography variant="subtitle1">
-          {student.fullName} ({student.group})
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Email: {student.email}
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Session Health: {student.sessionHealth}
-        </Typography>
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Login/Logout Timeline:
-        </Typography>
-        <List>
-          {student.loginLogoutTimeline.map((entry, idx) => (
-            <ListItem key={idx} disablePadding>
+        {studentDetails ? (
+          <List dense>
+            <ListItem>
               <ListItemText
-                primary={`${entry.action.toUpperCase()} @ ${new Date(
-                  entry.time
-                ).toLocaleString()}`}
+                primary="Full Name"
+                secondary={studentDetails.fullName}
               />
             </ListItem>
-          ))}
-        </List>
+            <ListItem>
+              <ListItemText primary="Area" secondary={studentDetails.area} />
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Group" secondary={studentDetails.group} />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Login Time"
+                secondary={
+                  studentDetails.login
+                    ? new Date(studentDetails.login).toLocaleString()
+                    : '-'
+                }
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Start Time"
+                secondary={
+                  studentDetails.start
+                    ? new Date(studentDetails.start).toLocaleString()
+                    : '-'
+                }
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Questions Synced"
+                secondary={studentDetails.questionsSynced}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Time Elapsed (min)"
+                secondary={studentDetails.timeElapsed}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Status"
+                secondary={studentDetails.status}
+              />
+            </ListItem>
+          </List>
+        ) : (
+          <Typography>No data found for this student.</Typography>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary" variant="outlined">

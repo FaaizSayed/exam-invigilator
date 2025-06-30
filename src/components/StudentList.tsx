@@ -58,15 +58,17 @@ const getColor = (
   }
 };
 
-export default function StudentList({
-  assessmentId,
-}: {
+type StudentListProps = {
   assessmentId: string;
-}) {
+};
+
+export default function StudentList({ assessmentId }: StudentListProps) {
   const { t } = useLanguage();
   const [data, setData] = useState<Submission[]>([]);
   const [filtered, setFiltered] = useState<Submission[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Submission | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
@@ -369,7 +371,7 @@ export default function StudentList({
                     </Avatar>
                     <Box>
                       <Button
-                        onClick={() => setSelectedStudent(row.username)}
+                        onClick={() => setSelectedStudent(row)}
                         variant="text"
                         size="small"
                         sx={{
@@ -538,7 +540,7 @@ export default function StudentList({
       </Paper>
 
       <StudentDetailsModal
-        username={selectedStudent || ''}
+        studentDetails={selectedStudent || undefined}
         onClose={() => setSelectedStudent(null)}
       />
     </Box>
