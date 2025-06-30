@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import type { Submission } from "../types/exam";
-import StudentFilters from "./StudentFilters";
-import Pagination from "./Pagination";
-import StudentDetailsModal from "./StudentDetailsModal";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useState, useEffect } from 'react';
+import type { Submission } from '../types/exam';
+import StudentFilters from './StudentFilters';
+import Pagination from './Pagination';
+import StudentDetailsModal from './StudentDetailsModal';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
   Button,
   CircularProgress,
@@ -20,9 +20,9 @@ import {
   IconButton,
   Tooltip,
   Avatar,
-} from "@mui/material";
-import { Person, Refresh, RestartAlt, Description } from "@mui/icons-material";
-import { getExamSubmissions } from "../Mockapis/examSubmissions";
+} from '@mui/material';
+import { Person, Refresh, RestartAlt, Description } from '@mui/icons-material';
+import { getExamSubmissions } from '../Mockapis/examSubmissions';
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -41,7 +41,9 @@ const getIcon = (status: string) => {
   }
 };
 
-const getColor = (status: string): 'success' | 'primary' | 'warning' | 'error' | 'default' => {
+const getColor = (
+  status: string
+): 'success' | 'primary' | 'warning' | 'error' | 'default' => {
   switch (status) {
     case 'Completed':
       return 'success';
@@ -56,7 +58,11 @@ const getColor = (status: string): 'success' | 'primary' | 'warning' | 'error' |
   }
 };
 
-export default function StudentList({ assessmentId }: { assessmentId: string }) {
+export default function StudentList({
+  assessmentId,
+}: {
+  assessmentId: string;
+}) {
   const { t } = useLanguage();
   const [data, setData] = useState<Submission[]>([]);
   const [filtered, setFiltered] = useState<Submission[]>([]);
@@ -64,10 +70,10 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
-    area: "",
-    group: "",
-    examinee: "",
-    status: "",
+    area: '',
+    group: '',
+    examinee: '',
+    status: '',
   });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
@@ -86,7 +92,9 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
       } catch (err) {
         if (mounted) {
           console.error('Failed to load submissions:', err);
-          setError(err instanceof Error ? err.message : "Failed to load submissions");
+          setError(
+            err instanceof Error ? err.message : 'Failed to load submissions'
+          );
         }
       } finally {
         if (mounted) {
@@ -102,23 +110,26 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
 
   useEffect(() => {
     let results = data;
-    
+
     if (filters.area) {
-      results = results.filter((result) => result.area === filters.area);
+      results = results.filter(result => result.area === filters.area);
     }
     if (filters.group) {
-      results = results.filter((result) => result.group === filters.group);
+      results = results.filter(result => result.group === filters.group);
     }
     if (filters.examinee) {
-      results = results.filter((result) => 
-        result.username.toLowerCase().includes(filters.examinee.toLowerCase()) ||
-      result.fullName.toLowerCase().includes(filters.examinee.toLowerCase())
+      results = results.filter(
+        result =>
+          result.username
+            .toLowerCase()
+            .includes(filters.examinee.toLowerCase()) ||
+          result.fullName.toLowerCase().includes(filters.examinee.toLowerCase())
       );
     }
     if (filters.status) {
-      results = results.filter((result) => result.status === filters.status);
+      results = results.filter(result => result.status === filters.status);
     }
-    
+
     setFiltered(results);
     setPage(1);
   }, [data, filters]);
@@ -127,21 +138,23 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
 
   const handleAction = async (action: string, submissionId: string) => {
     if (actionLoading.has(submissionId)) return;
-    
+
     setActionLoading(prev => new Set(prev).add(submissionId));
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       if (Math.random() < 0.15) {
         throw new Error(`${action} failed - please try again`);
       }
-      
-      setData(prev => prev.map(submission => 
-        submission.id === submissionId 
-          ? { ...submission, status: 'In Progress' as const }
-          : submission
-      ));
+
+      setData(prev =>
+        prev.map(submission =>
+          submission.id === submissionId
+            ? { ...submission, status: 'In Progress' as const }
+            : submission
+        )
+      );
     } catch (err) {
       console.error(`${action} failed:`, err);
     } finally {
@@ -155,11 +168,11 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
 
   if (loading) {
     return (
-      <Box 
-        display="flex" 
+      <Box
+        display="flex"
         flexDirection="column"
-        justifyContent="center" 
-        alignItems="center" 
+        justifyContent="center"
+        alignItems="center"
         minHeight="400px"
         sx={{
           backgroundColor: '#f8fafc',
@@ -177,9 +190,9 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
 
   if (error) {
     return (
-      <Alert 
-        severity="error" 
-        sx={{ 
+      <Alert
+        severity="error"
+        sx={{
           mb: 2,
           borderRadius: 2,
         }}
@@ -187,16 +200,16 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
         <Typography variant="body1" sx={{ fontWeight: 500, mb: 1 }}>
           {error}
         </Typography>
-        <Button 
+        <Button
           variant="contained"
-          size="small" 
+          size="small"
           onClick={() => window.location.reload()}
-          sx={{ 
+          sx={{
             mt: 1,
             backgroundColor: '#ef4444',
             '&:hover': {
               backgroundColor: '#dc2626',
-            }
+            },
           }}
         >
           {t('student.retry')}
@@ -207,20 +220,27 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
 
   if (data.length === 0) {
     return (
-      <Paper 
+      <Paper
         elevation={0}
-        sx={{ 
-          p: 6, 
+        sx={{
+          p: 6,
           textAlign: 'center',
           backgroundColor: '#f8fafc',
           borderRadius: 3,
           border: '2px dashed #cbd5e1',
         }}
       >
-        <Typography variant="h5" sx={{ mb: 2, color: '#475569', fontWeight: 600 }}>
+        <Typography
+          variant="h5"
+          sx={{ mb: 2, color: '#475569', fontWeight: 600 }}
+        >
           {t('student.no.found')}
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 400, mx: 'auto' }}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ maxWidth: 400, mx: 'auto' }}
+        >
           {t('student.no.found.desc')}
         </Typography>
       </Paper>
@@ -241,10 +261,10 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
           zIndex: 0,
         }}
       />
-      
-      <Paper 
+
+      <Paper
         elevation={0}
-        sx={{ 
+        sx={{
           p: 3,
           borderRadius: 3,
           backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -254,10 +274,19 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
           zIndex: 1,
         }}
       >
-        <Box sx={{ mb: 3, position: 'relative', zIndex: 2, backgroundColor: '#f1f1f1', padding: 2, borderRadius: 3 }}>
-          <Typography 
-            variant="h4" 
-            sx={{ 
+        <Box
+          sx={{
+            mb: 3,
+            position: 'relative',
+            zIndex: 2,
+            backgroundColor: '#f1f1f1',
+            padding: 2,
+            borderRadius: 3,
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
               mb: 1,
               color: '#6366f1',
               fontWeight: 700,
@@ -271,11 +300,11 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
         </Box>
 
         <StudentFilters data={data} filters={filters} setFilters={setFilters} />
-        
+
         {filtered.length === 0 && data.length > 0 && (
-          <Alert 
-            severity="info" 
-            sx={{ 
+          <Alert
+            severity="info"
+            sx={{
               mb: 3,
               borderRadius: 2,
               backgroundColor: '#3b82f6',
@@ -286,23 +315,37 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
             {t('student.no.match')}
           </Alert>
         )}
-        
+
         <Table size="medium" sx={{ mb: 2 }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('student')}</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('login.time')}</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('start.time')}</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('progress')}</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('time.elapsed')}</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('status')}</TableCell>
-              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>{t('actions')}</TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                {t('student')}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                {t('login.time')}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                {t('start.time')}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                {t('progress')}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                {t('time.elapsed')}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                {t('status')}
+              </TableCell>
+              <TableCell sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                {t('actions')}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginated.map((row) => (
-              <TableRow 
-                key={row.id} 
+            {paginated.map(row => (
+              <TableRow
+                key={row.id}
                 hover
                 sx={{
                   '&:hover': {
@@ -315,8 +358,8 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
               >
                 <TableCell>
                   <Box display="flex" alignItems="center" gap={2}>
-                    <Avatar 
-                      sx={{ 
+                    <Avatar
+                      sx={{
                         backgroundColor: '#6366f1',
                         width: 40,
                         height: 40,
@@ -325,12 +368,12 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
                       <Person />
                     </Avatar>
                     <Box>
-                      <Button 
+                      <Button
                         onClick={() => setSelectedStudent(row.username)}
                         variant="text"
                         size="small"
-                        sx={{ 
-                          p: 0, 
+                        sx={{
+                          p: 0,
                           minWidth: 'auto',
                           textTransform: 'none',
                           fontWeight: 600,
@@ -343,7 +386,11 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
                       >
                         {row.fullName}
                       </Button>
-                      <Typography variant="caption" color="text.secondary" display="block">
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        display="block"
+                      >
                         @{row.username}
                       </Typography>
                     </Box>
@@ -372,11 +419,13 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
                 <TableCell>
                   <Box display="flex" alignItems="center" gap={1}>
                     {getIcon(row.status)}
-                    <Chip 
-                      label={t(`status.${row.status.toLowerCase().replace(' ', '.')}`)} 
+                    <Chip
+                      label={t(
+                        `status.${row.status.toLowerCase().replace(' ', '.')}`
+                      )}
                       color={getColor(row.status)}
                       size="small"
-                      sx={{ 
+                      sx={{
                         fontWeight: 500,
                         '&.MuiChip-colorSuccess': {
                           backgroundColor: '#10b981',
@@ -401,58 +450,76 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
                 <TableCell>
                   <Box display="flex" gap={1}>
                     <Tooltip title={t('student.reset.timer')}>
-                      <IconButton
-                        onClick={() => handleAction('Reset Timer', row.id)}
-                        disabled={actionLoading.has(row.id)}
-                        size="small"
-                        sx={{
-                          color: '#6366f1',
-                          '&:hover': {
-                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                          },
-                          '&:disabled': {
-                            color: '#d1d5db',
-                          },
-                        }}
-                      >
-                        <Refresh />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          onClick={() => handleAction('Reset Timer', row.id)}
+                          disabled={
+                            row.status !== 'Student Submission' ||
+                            actionLoading.has(row.id)
+                          }
+                          size="small"
+                          sx={{
+                            color: '#6366f1',
+                            '&:hover': {
+                              backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            },
+                            '&:disabled': {
+                              color: '#d1d5db',
+                            },
+                          }}
+                        >
+                          <Refresh />
+                        </IconButton>
+                      </span>
                     </Tooltip>
                     <Tooltip title={t('student.restart.session')}>
-                      <IconButton
-                        onClick={() => handleAction('Restart Session', row.id)}
-                        disabled={actionLoading.has(row.id)}
-                        size="small"
-                        sx={{
-                          color: '#ec4899',
-                          '&:hover': {
-                            backgroundColor: 'rgba(236, 72, 153, 0.1)',
-                          },
-                          '&:disabled': {
-                            color: '#d1d5db',
-                          },
-                        }}
-                      >
-                        <RestartAlt />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          onClick={() =>
+                            handleAction('Restart Session', row.id)
+                          }
+                          disabled={
+                            row.status !== 'Student Submission' ||
+                            actionLoading.has(row.id)
+                          }
+                          size="small"
+                          sx={{
+                            color: '#ec4899',
+                            '&:hover': {
+                              backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                            },
+                            '&:disabled': {
+                              color: '#d1d5db',
+                            },
+                          }}
+                        >
+                          <RestartAlt />
+                        </IconButton>
+                      </span>
                     </Tooltip>
                     <Tooltip title={t('student.switch.paper')}>
-                      <IconButton
-                        onClick={() => handleAction('Switch to Paper', row.id)}
-                        disabled={actionLoading.has(row.id)}
-                        size="small"
-                        sx={{
-                          color: '#f59e0b',
-                          '&:hover': {
-                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                          },
-                          '&:disabled': {
-                            color: '#d1d5db',
-                          },
-                        }}
-                      >
-                        <Description />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          onClick={() =>
+                            handleAction('Switch to Paper', row.id)
+                          }
+                          disabled={
+                            row.status !== 'Absent' || actionLoading.has(row.id)
+                          }
+                          size="small"
+                          sx={{
+                            color: '#f59e0b',
+                            '&:hover': {
+                              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            },
+                            '&:disabled': {
+                              color: '#d1d5db',
+                            },
+                          }}
+                        >
+                          <Description />
+                        </IconButton>
+                      </span>
                     </Tooltip>
                   </Box>
                 </TableCell>
@@ -460,7 +527,7 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
             ))}
           </TableBody>
         </Table>
-        
+
         <Pagination
           count={filtered.length}
           page={page}
@@ -469,7 +536,7 @@ export default function StudentList({ assessmentId }: { assessmentId: string }) 
           setPageSize={setPageSize}
         />
       </Paper>
-      
+
       <StudentDetailsModal
         username={selectedStudent || ''}
         onClose={() => setSelectedStudent(null)}
