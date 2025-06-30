@@ -231,6 +231,7 @@ export async function getAssessmentById(id: string): Promise<Exam | null> {
 
 export const getAssessments = async (): Promise<Exam[]> => {
   await new Promise((resolve) => setTimeout(resolve, 500));
+  // throw new Error("Failed to fetch assessments"); // You can uncomment this to see the failing scenario
   return mockAssessments;
 };
 
