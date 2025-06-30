@@ -68,7 +68,7 @@ const format = (dateString: string): string => {
 export default function AssessmentTable() {
   const { t } = useLanguage();
   const [data, setData] = useState<Exam[]>([]);
-  const [filtered, setFiltered] = useState<Exam[]>([]);
+  const [filteredData, setFilteredData] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
@@ -128,11 +128,11 @@ export default function AssessmentTable() {
       results = results.filter((result) => result.status === filters.status);
     }
     
-    setFiltered(results);
+    setFilteredData(results);
     setPage(1);
   }, [data, filters]);
 
-  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const paginated = filteredData.slice((page - 1) * pageSize, page * pageSize);
 
   const handleSync = async (assessmentId: string) => {
     if (syncingIds.has(assessmentId)) return;
@@ -280,7 +280,7 @@ export default function AssessmentTable() {
 
         <Filters data={data} filters={filters} setFilters={setFilters} />
         
-        {filtered.length === 0 && data.length > 0 && (
+        {filteredData.length === 0 && data.length > 0 && (
           <Alert 
             severity="info" 
             sx={{ 
@@ -416,7 +416,7 @@ export default function AssessmentTable() {
         </Table>
         
         <Pagination
-          count={filtered.length}
+          count={filteredData.length}
           page={page}
           pageSize={pageSize}
           setPage={setPage}
