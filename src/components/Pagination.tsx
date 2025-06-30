@@ -17,7 +17,7 @@ export default function Pagination({
   pageSize,
   setPage,
   setPageSize,
-  pageSizeOptions = [10, 25, 50],
+  pageSizeOptions = [10, 25, 50, 100],
 }: Props) {
   const { t, language } = useLanguage();
   const isRTL = language === 'ar';
