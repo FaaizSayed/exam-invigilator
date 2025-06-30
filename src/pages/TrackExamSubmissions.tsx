@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Box, Button } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
-import StudentTable from "../components/ExamineeList";
+import StudentList from "../components/StudentList";
 import { useLanguage } from "../contexts/LanguageContext";
 
 export default function TrackExamSubmissions() {
@@ -14,7 +14,7 @@ export default function TrackExamSubmissions() {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box sx={{ mb: 3 }}>
         <Button
           component={Link}
           to="/"
@@ -22,10 +22,11 @@ export default function TrackExamSubmissions() {
           startIcon={<ArrowBack />}
           sx={{
             borderColor: '#6366f1',
+            marginBottom: '1rem',
             color: '#6366f1',
             '&:hover': {
-              borderColor: '#4f46e5',
-              backgroundColor: 'rgba(99, 102, 241, 0.1)',
+              color: '#fff',
+              backgroundColor: '#6366f1',
             },
           }}
         >
@@ -36,10 +37,7 @@ export default function TrackExamSubmissions() {
             margin: 0, 
             fontSize: '2rem', 
             fontWeight: 700,
-            background: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            color: '#333333',
           }}>
             {t('track.exam.submissions')}
           </h1>
@@ -52,7 +50,7 @@ export default function TrackExamSubmissions() {
           </p>
         </Box>
       </Box>
-      <StudentTable assessmentId={assessmentId} />
+      <StudentList assessmentId={assessmentId} />
     </Box>
   );
 }
