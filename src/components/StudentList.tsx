@@ -56,7 +56,7 @@ const getColor = (status: string): 'success' | 'primary' | 'warning' | 'error' |
   }
 };
 
-export default function StudentTable({ assessmentId }: { assessmentId: string }) {
+export default function StudentList({ assessmentId }: { assessmentId: string }) {
   const { t } = useLanguage();
   const [data, setData] = useState<Submission[]>([]);
   const [filtered, setFiltered] = useState<Submission[]>([]);
@@ -101,25 +101,25 @@ export default function StudentTable({ assessmentId }: { assessmentId: string })
   }, [assessmentId]);
 
   useEffect(() => {
-    let result = data;
+    let results = data;
     
     if (filters.area) {
-      result = result.filter((a) => a.area === filters.area);
+      results = results.filter((result) => result.area === filters.area);
     }
     if (filters.group) {
-      result = result.filter((a) => a.group === filters.group);
+      results = results.filter((result) => result.group === filters.group);
     }
     if (filters.examinee) {
-      result = result.filter((a) => 
-        a.username.toLowerCase().includes(filters.examinee.toLowerCase()) ||
-        a.fullName.toLowerCase().includes(filters.examinee.toLowerCase())
+      results = results.filter((result) => 
+        result.username.toLowerCase().includes(filters.examinee.toLowerCase()) ||
+      result.fullName.toLowerCase().includes(filters.examinee.toLowerCase())
       );
     }
     if (filters.status) {
-      result = result.filter((a) => a.status === filters.status);
+      results = results.filter((result) => result.status === filters.status);
     }
     
-    setFiltered(result);
+    setFiltered(results);
     setPage(1);
   }, [data, filters]);
 
@@ -236,7 +236,7 @@ export default function StudentTable({ assessmentId }: { assessmentId: string })
           left: 0,
           right: 0,
           height: 200,
-          backgroundColor: '#ec4899',
+          backgroundColor: '#f1f1f1',
           borderRadius: '12px 12px 0 0',
           zIndex: 0,
         }}
@@ -254,12 +254,12 @@ export default function StudentTable({ assessmentId }: { assessmentId: string })
           zIndex: 1,
         }}
       >
-        <Box sx={{ mb: 3, position: 'relative', zIndex: 2 }}>
+        <Box sx={{ mb: 3, position: 'relative', zIndex: 2, backgroundColor: '#f1f1f1', padding: 2, borderRadius: 3 }}>
           <Typography 
             variant="h4" 
             sx={{ 
               mb: 1,
-              color: '#ec4899',
+              color: '#333333',
               fontWeight: 700,
             }}
           >
