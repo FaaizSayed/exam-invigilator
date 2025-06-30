@@ -1,4 +1,4 @@
-# Exam Invigilator Web App
+# Exam Management Web App
 
 A React-based web application for managing and monitoring exam submissions in real-time.
 
