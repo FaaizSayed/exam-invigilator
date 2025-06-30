@@ -24,8 +24,6 @@ import { Link } from "react-router-dom";
 import { Visibility, Sync, CheckCircle, Schedule, PlayArrow } from "@mui/icons-material";
 import { getAssessments } from "../Mockapis/assessments";
 
-const PAGE_SIZE_OPTIONS = [10, 25, 50];
-
 const getIcon = (status: string) => {
   switch (status) {
     case 'Completed':
@@ -421,7 +419,6 @@ export default function AssessmentTable() {
           pageSize={pageSize}
           setPage={setPage}
           setPageSize={setPageSize}
-          pageSizeOptions={PAGE_SIZE_OPTIONS}
         />
       </Paper>
       
