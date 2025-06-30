@@ -1,6 +1,6 @@
 export const translations = {
   en: {
-    'app.title': 'Exam Invigilator',
+    'app.title': 'Exam Management',
     'track.exam.submissions': 'Track Exam Submissions',
     'back.to.assessments': 'Back to Assessments',
     'rows.per.page': 'Rows per page:',
@@ -49,16 +49,10 @@ export const translations = {
     'filters.program': 'Program',
     'filters.course': 'Course',
     
-    'tree.hierarchy': 'Group Hierarchy',
-    'tree.assessments': 'assessments',
-    'tree.no.available': 'No assessments available',
-    'tree.assessment': 'Assessment',
-    'tree.description': 'View assessments organized by area and program hierarchy',
     'group.by.area': 'Group by Area',
     'group.by.program': 'Group by Program',
     
     'tabs.assessment.list': 'Assessment List',
-    'tabs.group.tree': 'Group Tree View',
     
     'pagination.showing': 'Showing',
     'pagination.of': 'of',
@@ -89,7 +83,7 @@ export const translations = {
     'student': 'Student',
   },
   ar: {
-    'app.title': 'مراقب الامتحان',
+    'app.title': 'إدارة الامتحانات',
     'track.exam.submissions': 'تتبع تقديمات الامتحان',
     'back.to.assessments': 'العودة إلى التقييمات',
     'rows.per.page': 'الصفوف في الصفحة:',
@@ -137,17 +131,11 @@ export const translations = {
     'filters.status': 'الحالة',
     'filters.program': 'البرنامج',
     'filters.course': 'المقرر',
-    
-    'tree.hierarchy': 'تسلسل المجموعات',
-    'tree.assessments': 'تقييمات',
-    'tree.no.available': 'لا توجد تقييمات متاحة',
-    'tree.assessment': 'التقييم',
-    'tree.description': 'عرض التقييمات المنظمة بناءً على تسلسل المنطقة والبرنامج',
+  
     'group.by.area': 'مجموعة حسب المنطقة',
     'group.by.program': 'مجموعة حسب البرنامج',
     
     'tabs.assessment.list': 'قائمة التقييمات',
-    'tabs.group.tree': 'عرض شجرة المجموعات',
     
     'pagination.showing': 'عرض',
     'pagination.of': 'من',
